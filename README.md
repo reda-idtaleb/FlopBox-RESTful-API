@@ -22,6 +22,9 @@ Run the jar (located at the root of the project) with:
 ```bash
 java -jar target/sr2-tp1-idtaleb-1.0-SNAPSHOT.jar
 ```
+# Curl commands
+In order to test the API with Curl commands you can read the [commands.md)(https://github.com/reda-idtaleb/FlopBox_RestFul_API/blob/master/commands.md). All Curl commands are reported there.
+
 # Project tree structure
 <pre><font color="#3465A4"><b>.</b></font>
 ├── <font color="#3465A4"><b>application</b></font>
