@@ -1,6 +1,6 @@
 # The FlopBox platform developed in Java
-- Full name: ID-TALEB Réda
-- Date: 05 march 2022
+- Author: ID-TALEB Réda
+- Creation date: 05 march 2022
 
 # Introduction
 This project implements a platform called FlopBox which is used to centralize the management of remote files stored in a user's FTP servers. The user will be able to interact with his various FTP servers through the FlopBox API and this by using the services offered by the Restful API. There are many services, among them the user can retrieve or/and send files to an FTP server, etc. FlopBox follows a Restful architectural style, it is built with Java JAX-RS API.
