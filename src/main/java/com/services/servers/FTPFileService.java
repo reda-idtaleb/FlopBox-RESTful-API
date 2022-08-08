@@ -1,4 +1,4 @@
-package com.services.ftp_files;
+package com.services.servers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,9 +21,8 @@ import com.exceptions.NotFoundResourceException;
 import com.exceptions.UnmatchedJSONKeysException;
 import com.repository.ServerRepository;
 import com.services.customers.CustomerEntity;
-import com.services.servers.FTPServerEntity;
-import com.services.servers.FTPServerService;
-import com.services.servers.FTPServerSession;
+import com.services.ftp_files.AbstractFTPFileComponentEntity;
+import com.services.ftp_files.FTPDirectoryEntity;
 import com.utils.AllowedDataFields;
 
 public class FTPFileService extends FTPServerService {

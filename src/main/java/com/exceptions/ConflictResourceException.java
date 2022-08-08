@@ -12,5 +12,4 @@ public class ConflictResourceException extends Exception {
 		super(message);
 	}
 
-
 }

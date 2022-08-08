@@ -1,9 +1,7 @@
 package com.repository;
 
-import java.util.HashMap;
 import java.util.List;
 
-import com.data.JsonDataBase;
 import com.exceptions.AliasNotFoundException;
 import com.exceptions.InternalServerErrorException;
 import com.services.customers.CustomerEntity;
@@ -15,6 +13,7 @@ import com.services.servers.FTPServerEntity;
  * @author idtaleb
  */
 public interface ServerRepository extends Repository {
+	
 	/**
 	 * Get the FTP server object corresponding to the given alias.
 	 * @param alias The alias of the FTP server.
@@ -56,7 +55,8 @@ public interface ServerRepository extends Repository {
 	 * @throws InternalServerErrorException When an internal error occurs during 
 	 * 			the delete operation.
 	 */
-	public FTPServerEntity delete(String alias, CustomerEntity customer) throws AliasNotFoundException, InternalServerErrorException;
+	public FTPServerEntity delete(String alias, CustomerEntity customer) throws AliasNotFoundException, 
+																				InternalServerErrorException;
 	
 	/**
 	 * Update the servers list of a customer
@@ -64,6 +64,6 @@ public interface ServerRepository extends Repository {
 	 * @throws InternalServerErrorException When an internal error occurs during 
 	 * 			the update operation.
 	 */
-	void update(CustomerEntity customer) throws InternalServerErrorException;
+	public void update(CustomerEntity customer) throws InternalServerErrorException;
 }
 

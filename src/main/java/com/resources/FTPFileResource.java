@@ -16,7 +16,7 @@ import com.repository.ServerRepository;
 import com.repository.factory.ServerRepositoryFactory;
 import com.services.customers.CustomerEntity;
 import com.services.ftp_files.AbstractFTPFileComponentEntity;
-import com.services.ftp_files.FTPFileService;
+import com.services.servers.FTPFileService;
 import com.utils.AllowedDataFields;
 
 import jakarta.ws.rs.Consumes;

@@ -46,8 +46,7 @@ public class PasswordEncryption {
         return returnValue;
     }
     
-    public static boolean verifyUserPassword(String providedPassword,
-            String securedPassword, String salt) {
+    public static boolean verifyUserPassword(String providedPassword, String securedPassword, String salt) {
         boolean returnValue = false;
         
         // Generate New secure password with the same salt

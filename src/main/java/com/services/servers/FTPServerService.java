@@ -1,8 +1,10 @@
 package com.services.servers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.data.JsonDataBase;
 import com.exceptions.AliasAlreadyExistException;
 import com.exceptions.AliasNotFoundException;
 import com.exceptions.InternalServerErrorException;
@@ -102,12 +104,14 @@ public class FTPServerService implements Serviceable {
 	 * @throws UnmatchedJSONValuesException When the value of the port is not an integer number.
 	 * @throws InternalServerErrorException When an internal error occurs during the update operation.
 	 */
-	public HashMap<String, FTPServerEntity> updateServer(String oldAlias, HashMap<String, String> newData, CustomerEntity customer) 
-					   throws AliasNotFoundException, 
-					          UnmatchedJSONKeysException, 
-							  JSONFieldValueException, 
-							  UnmatchedJSONValuesException, 
-							  InternalServerErrorException {
+	public HashMap<String, FTPServerEntity> updateServer(String oldAlias, 
+														 HashMap<String, String> newData, 
+														 CustomerEntity customer) 
+											throws AliasNotFoundException, 
+												   UnmatchedJSONKeysException, 
+												   JSONFieldValueException, 
+												   UnmatchedJSONValuesException, 
+												   InternalServerErrorException {
 		HashMap<String, FTPServerEntity> reply = new HashMap<>();
 		
 		String newAlias = newData.get(AllowedDataFields.ALIAS_FIELD);
@@ -135,14 +139,24 @@ public class FTPServerService implements Serviceable {
 			throw new JSONFieldValueException(JSONFieldValueException.errorMsg(AllowedDataFields.PORT_FIELD)); 
 		if (newPort!=null && !isValidPort(newPort))
 			throw new UnmatchedJSONValuesException(UnmatchedJSONValuesException.PORT_VALUE_ERROR);
+		
 		updatedServer = updateServerAssociation(newAlias, newAddress, newPort, updatedServer);
 		reply.put(newInfoLabel, updatedServer);
+		
 		customer.addServer(updatedServer);
 		serverRepository.update(customer);
 		return reply;
 	}
 	
-	private FTPServerEntity updateServerAssociation(String alias, String address, String port, FTPServerEntity server){
+	/**
+	 * Update the alias and/or the url of the server. 
+	 * @param alias The alias of the FTP server to set. The alias mustn't be an empty string.
+	 * @param address The address of the FTP server to set. The address mustn't be an empty string.Î
+	 * @param server The FTP server instance to update. 
+	 * @param port The new port of the FTP server.
+	 * @return returns the updated FTP server instance.
+	 */
+	private FTPServerEntity updateServerAssociation(String alias, String address, String port, FTPServerEntity server) {
 		if (address != null) 
 			server.setAddress(address);
 		if (alias != null) 

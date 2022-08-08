@@ -37,9 +37,10 @@ public class FTPServerResourceTest extends JerseyTest {
 	
 	private static final String AUTHORIZATION = "Authorization";
 	private CustomerEntity fakeCustomer; 
-	private CustomerRepositoryImp cusRep;
-	private Builder requestBuilder;
-	private String serverAlias;
+	protected CustomerRepositoryImp cusRep;
+	protected Builder requestBuilder;
+	protected String serverAlias;
+	protected String username, pwd;
 	
 	@Override
     protected Application configure() {
@@ -58,7 +59,8 @@ public class FTPServerResourceTest extends JerseyTest {
 	@Before
 	public void init() {
 		try {
-			fakeCustomer = new CustomerEntity("fake", "fake");
+			username = "fake"; pwd = "fake";
+			fakeCustomer = new CustomerEntity(username, pwd);
 			cusRep = new CustomerRepositoryImp();		
 			cusRep.save(fakeCustomer);
 			serverAlias = "myServer";
@@ -69,7 +71,7 @@ public class FTPServerResourceTest extends JerseyTest {
 	}
 	
 	@After
-	public void free() {
+	public void clean() {
 		try {
 			cusRep.delete(cusRep.getCustomerByName(fakeCustomer.getUsername()));
 			cusRep = new CustomerRepositoryImp();	
@@ -127,15 +129,15 @@ public class FTPServerResourceTest extends JerseyTest {
 	    this.requestBuilder = target("servers/"+serverAlias)
 				   			  .request()
 				              .header(AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString("fake:fake".getBytes()));
-	    GenericType<HashMap<String, HashMap<String, FTPServerEntity>>> genType = new GenericType<HashMap<String, HashMap<String, FTPServerEntity>>>() {};
 	    Response reply = requestBuilder.put(Entity.json(newServer));
 	    assertEquals(Response.Status.OK.getStatusCode(), reply.getStatus());
 	}
 	
-	private Builder buildRequest(String alias) {
+	protected Builder buildRequest(String alias) {
+		byte[] loginKey = String.format("%s:%s", username, pwd).getBytes();
 		return target("servers/"+alias)
 			   .request(MediaType.APPLICATION_JSON)
-			   .header(AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString("fake:fake".getBytes()));
+			   .header(AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(loginKey));
 	}
 
 }
