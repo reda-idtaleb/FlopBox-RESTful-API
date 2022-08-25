@@ -47,7 +47,7 @@ Client-side error handling is enhanced when sending requests, for example:
 - The `/signin` sub-resource of the `/users` resource allows you to register in the FlopBox API.
 - Your login data must be sent in JSON format (`-d '{"username": "my_name","pwd": "my_password"}'`)
 ```bash
-curl -v -H "Content-Type: application/json" -X POST -d '{"username": "reda","pwd": "reda"}' http://localhost:8080/v1/users/ sign in
+curl -v -H "Content-Type: application/json" -X POST -d '{"username": "reda","pwd": "reda"}' http://localhost:8080/v1/users/signin
 ```
 ## Remark:
 - The two fields `username` and `pwd` must be present when sending the POST request.

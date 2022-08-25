@@ -1,5 +1,6 @@
 package com.data;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -83,8 +84,16 @@ public class JsonDataBase {
 			System.out.println("Json I/O error");
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			System.out.println("No database found: " + DataBaseInfo.DATA_BASE_PATH);
-			e.printStackTrace();
+			File file = new File(DataBaseInfo.DATA_BASE_PATH);
+			if (!file.exists()) {
+				try {
+					file.createNewFile();
+					database = readJSONData();
+				} catch (IOException e1) {
+					System.out.println("Problem when initializing users database");
+					e.printStackTrace();
+				}
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
