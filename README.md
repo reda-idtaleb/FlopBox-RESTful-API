@@ -102,7 +102,7 @@ Here is a diagram summarizing the layered organization of the FlopBox platform:
 
 <img src="./docs/layered_architecture.png" alt="drawing" width="600"/>
 
-### **Nous allons spécifier ces trois couches:**
+### **We will specify these layers:**
 
 - **Client interaction layer** 
 
@@ -123,4 +123,6 @@ Here is a diagram summarizing the layered organization of the FlopBox platform:
 	
 	This database layer is used to store domain objects (like CustomerEntity and FTPServerEntity). A JSON database is used at this level. 
 
-> **UML diagrams for each layer are available in the /docs folder.**
+# Project conception
+
+> **UML diagrams for each layer are available in the [docs](docs) folder.**

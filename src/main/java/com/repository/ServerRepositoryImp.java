@@ -1,6 +1,7 @@
 package com.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.exceptions.AliasNotFoundException;
@@ -8,7 +9,7 @@ import com.exceptions.InternalServerErrorException;
 import com.services.customers.CustomerEntity;
 import com.services.servers.FTPServerEntity;
 
-public class ServerRepositoryImp extends RepositoryImp implements ServerRepository {
+public class ServerRepositoryImp implements ServerRepository {
 
 	public ServerRepositoryImp() {
 		super();
@@ -55,5 +56,4 @@ public class ServerRepositoryImp extends RepositoryImp implements ServerReposito
 		this.update(customer);
 		return removed;
 	}
-
 }

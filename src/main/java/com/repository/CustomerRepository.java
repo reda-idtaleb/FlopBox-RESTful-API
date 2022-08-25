@@ -35,7 +35,7 @@ public interface CustomerRepository extends Repository {
 	 * @return Returns true if the customer is already signed in, 
 	 *         otherwise returns false. 
 	 */
-	public boolean isRegistered(String username);
+	boolean isRegistered(String username);
 
 	/**
 	 * Save a customer into the data base.

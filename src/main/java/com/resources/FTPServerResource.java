@@ -30,7 +30,7 @@ import jakarta.ws.rs.core.UriInfo;
 
 @Path("/servers")
 public class FTPServerResource extends ResourceImp{
-	private FTPServerService serverService = ((FTPServerService) new ServerRepositoryFactory().createService());
+	private FTPServerService serverService = ServerRepositoryFactory.buildService();
 	
     @GET
     @Produces(MediaType.APPLICATION_JSON)

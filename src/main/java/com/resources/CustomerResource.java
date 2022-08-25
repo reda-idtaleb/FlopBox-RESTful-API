@@ -7,7 +7,6 @@ import com.exceptions.NotFoundResourceException;
 import com.repository.factory.CustomerRepositoryFactory;
 import com.services.customers.CustomerEntity;
 import com.services.customers.CustomerService;
-import com.utils.AllowedDataFields;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -23,7 +22,7 @@ import jakarta.ws.rs.core.Response;
 
 @Path("users")
 public class CustomerResource extends ResourceImp{
-	private CustomerService customerService = ((CustomerService) new CustomerRepositoryFactory().createService());
+	private CustomerService customerService = CustomerRepositoryFactory.buildService();
 	
     @GET
     @Produces(MediaType.APPLICATION_JSON)

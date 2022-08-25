@@ -7,7 +7,7 @@ import com.exceptions.CustomerNotFoundException;
 import com.exceptions.InternalServerErrorException;
 import com.services.customers.CustomerEntity;
 
-public class CustomerRepositoryImp extends RepositoryImp implements CustomerRepository {
+public class CustomerRepositoryImp implements CustomerRepository {
 
 	public CustomerRepositoryImp() {
 		super();

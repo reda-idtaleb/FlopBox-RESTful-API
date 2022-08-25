@@ -8,11 +8,11 @@ public interface RepositoryFactory {
 	/**
 	 * @return returns a repository factory depending of the type of the sender.
 	 */
-	public Repository createRepository();
+	Repository createRepository();
 	
 	/**
 	 * @return returns a service factory depending of the type of the sender.
 	 */
-	public Serviceable createService();
+	Serviceable createService();
 	
 }

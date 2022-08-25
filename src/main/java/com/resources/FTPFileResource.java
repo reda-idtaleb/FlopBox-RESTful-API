@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -15,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.repository.ServerRepository;
 import com.repository.factory.ServerRepositoryFactory;
 import com.services.customers.CustomerEntity;
-import com.services.ftp_files.AbstractFTPFileComponentEntity;
 import com.services.servers.FTPFileService;
 import com.utils.AllowedDataFields;
 
@@ -40,7 +38,7 @@ import jakarta.ws.rs.core.Response;
  */
 public class FTPFileResource extends ResourceImp {
 	
-	private FTPFileService ftpFileService = new FTPFileService((ServerRepository) new ServerRepositoryFactory().createRepository());
+	private FTPFileService ftpFileService = new FTPFileService(ServerRepositoryFactory.buildRepository());
 	
 	@Path("/list{path: .*}")
     @GET

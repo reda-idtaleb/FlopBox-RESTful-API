@@ -13,6 +13,12 @@ import com.services.servers.FTPServerEntity;
  * @author idtaleb
  */
 public interface ServerRepository extends Repository {
+	/**
+	 * Get all servers of a customer
+	 * @param customer The customer 
+	 * @return Returns a list of servers
+	 */
+	public List<FTPServerEntity> findAll(CustomerEntity customer);
 	
 	/**
 	 * Get the FTP server object corresponding to the given alias.
@@ -22,13 +28,7 @@ public interface ServerRepository extends Repository {
 	 * @throws AliasNotFoundException When the alias of the fTP server is not found.
 	 */
 	public FTPServerEntity getFTPServerByAlias(String alias, CustomerEntity customer) throws AliasNotFoundException; 
-	
-	/**
-	 * Get all servers of a customer
-	 * @param customer The customer 
-	 * @return Returns a list of servers
-	 */
-	public List<FTPServerEntity> findAll(CustomerEntity customer);
+
 	
 	/**
 	 * Check if the given alias exists in the client's server list.

@@ -8,7 +8,21 @@ import com.services.servers.FTPServerService;
 
 public class ServerRepositoryFactory implements RepositoryFactory {
 
-	public ServerRepositoryFactory() {}
+	/**
+	 * Use this convenience methods instead of the implemented methods.
+	 * @return returns a repository factory depending of the type of the sender.
+	 */
+	public static ServerRepository buildRepository() {
+		return (ServerRepository) new ServerRepositoryFactory().createRepository();
+	}
+
+	/**
+	 * Use this convenience methods instead of the implemented methods.
+	 * @return returns a service factory depending of the type of the sender.
+	 */
+	public static FTPServerService buildService() {
+		return (FTPServerService) new ServerRepositoryFactory().createService();
+	}
 
 	@Override
 	public Repository createRepository() {
