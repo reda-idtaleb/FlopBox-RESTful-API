@@ -63,7 +63,6 @@ In order to test the API with Curl commands you can read the [commands.md](https
 │   │   ├── CustomerRepositoryFactory.java
 │   │   ├── RepositoryFactory.java
 │   │   └── ServerRepositoryFactory.java
-│   ├── RepositoryImp.java
 │   ├── Repository.java
 │   ├── ServerRepositoryImp.java
 │   └── ServerRepository.java
@@ -91,7 +90,7 @@ In order to test the API with Curl commands you can read the [commands.md](https
     ├── AllowedDataFields.java
     └── CustomJacksonMapperProvider.java
 
-12 directories, 51 files
+12 directories, 50 files
 </pre>
 
 # Architecture
