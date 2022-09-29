@@ -2,12 +2,12 @@ package com.repository;
 
 import java.util.HashMap;
 
-import com.data.JsonDataBase;
+import com.data.JsonDatabase;
 import com.exceptions.CustomerNotFoundException;
 import com.exceptions.InternalServerErrorException;
 import com.services.customers.CustomerEntity;
 
-public class CustomerRepositoryImp implements CustomerRepository {
+public class CustomerRepositoryImp extends RepositoryImpl implements CustomerRepository {
 
 	public CustomerRepositoryImp() {
 		super();

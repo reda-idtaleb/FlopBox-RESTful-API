@@ -12,10 +12,10 @@ import com.exceptions.ConflictResourceException;
 import com.exceptions.NotFoundResourceException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.repository.ServerRepository;
-import com.repository.factory.ServerRepositoryFactory;
 import com.services.customers.CustomerEntity;
 import com.services.servers.FTPFileService;
 import com.utils.AllowedDataFields;
+import com.utils.factory.ServerBusinessFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -38,7 +38,7 @@ import jakarta.ws.rs.core.Response;
  */
 public class FTPFileResource extends ResourceImp {
 	
-	private FTPFileService ftpFileService = new FTPFileService(ServerRepositoryFactory.buildRepository());
+	private FTPFileService ftpFileService = new FTPFileService(ServerBusinessFactory.buildRepository());
 	
 	@Path("/list{path: .*}")
     @GET

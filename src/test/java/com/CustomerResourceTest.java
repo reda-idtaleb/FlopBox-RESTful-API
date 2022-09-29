@@ -2,18 +2,19 @@ package com;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
 import java.util.Base64;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.exceptions.CustomerNotFoundException;
-import com.exceptions.InternalServerErrorException;
 import com.repository.CustomerRepositoryImp;
 import com.resources.CustomerResource;
+import com.services.customers.CustomerService;
 
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.Invocation.Builder;
@@ -24,8 +25,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
  
 public class CustomerResourceTest extends JerseyTest {
-	
-	private static final String AUTHORIZATION = "Authorization";
+	private final String AUTHORIZATION = "Authorization";
 	private String username, pwd;
 	String loginKeys;
 	
@@ -33,7 +33,9 @@ public class CustomerResourceTest extends JerseyTest {
     protected Application configure() {
 		enable(TestProperties.LOG_TRAFFIC);
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(CustomerResource.class);
+        ResourceConfig rc = new ResourceConfig();
+		rc.register(new CustomerResourceMock());
+		return rc;
     }
 	
 	@Before
@@ -41,6 +43,15 @@ public class CustomerResourceTest extends JerseyTest {
 		username = "fake"; 
 		pwd = "fake";
 		loginKeys = String.format("{\"username\":\"%s\", \"pwd\":\"%s\"}", username, pwd);
+	}
+
+	/**
+	 * Remove the dumped customer from the temporary database
+	 */
+	@After
+	public void clean() {
+		File file = new File(new DatabaseFixture().new JsonDatabaseMock().getDbInfo().getDatabasePath());
+		if (file.exists()) file.delete();
 	}
 	
 	@Test
@@ -57,9 +68,7 @@ public class CustomerResourceTest extends JerseyTest {
 	@Test
 	public void testCreateCustomer() {
 	    Response response = this.sendDummyPostRequest("/users/signin", loginKeys);
-	    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
-	    
-	    this.cleanResource();		
+	    assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());	
 	}
 	
 	@Test
@@ -70,8 +79,6 @@ public class CustomerResourceTest extends JerseyTest {
 	    // Re-send the same login keys to signin
 	    response = this.sendDummyPostRequest("/users/signin", loginKeys);
 	    assertEquals(Response.Status.CONFLICT.getStatusCode(), response.getStatus());
-	        
-	    this.cleanResource();
 	}
 	
 	@Test
@@ -104,18 +111,6 @@ public class CustomerResourceTest extends JerseyTest {
 	    Response response = requestBuilder.post(Entity.json(serverAddress));
 	    assertEquals(Response.Status.NOT_FOUND.getStatusCode(), response.getStatus());
 	}
-	
-	/**
-	 * Remove the dumped customer from the temporary database
-	 */
-	private void cleanResource() {
-		try {
-	    	CustomerRepositoryImp cusRep = new CustomerRepositoryImp();
-			cusRep.delete(cusRep.getCustomerByName(username));
-		} catch (InternalServerErrorException | CustomerNotFoundException e) {
-			// do nothing
-		}
-	}
 
 	private Response sendDummyPostRequest(String urlPattern, String dataAsJson) {
 		return target(urlPattern)
@@ -129,5 +124,18 @@ public class CustomerResourceTest extends JerseyTest {
 			   .request(MediaType.APPLICATION_JSON)
 			   .header(AUTHORIZATION, "Basic " + Base64.getEncoder().encodeToString(formatLoginKeys));
 	}
-	
+
+	private class CustomerResourceMock extends CustomerResource{
+		CustomerResourceMock () {
+			CustomerService fakeService = new CustomerService(new CustomerRepositoryImpMock());
+			setCustomerService(fakeService);
+		}
+	}
+
+	private class CustomerRepositoryImpMock extends CustomerRepositoryImp{
+		CustomerRepositoryImpMock () {
+			super();
+			this.setDataWorker(new DatabaseFixture().new JsonDatabaseMock());
+		}
+	}
 }

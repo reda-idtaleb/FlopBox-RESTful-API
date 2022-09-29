@@ -1,11 +1,25 @@
 package com.data;
 
 public class DataBaseInfo {
+	private final String LOCAL_ROOT = System.getProperty("user.dir");
+	private final String SEPERATOR = System.getProperty("file.separator");
+	private static final String DEFAULT_DB_FILENAME = "users_db.json";	
+	
+	private String filename;
 
-	private static final String SEPERATOR = System.getProperty("file.separator");
-	private static final String FILENAME = "users_db.json";
-	
-	private static final String LOCAL_ROOT = System.getProperty("user.dir");
-	public static final String DATA_BASE_PATH = LOCAL_ROOT+SEPERATOR+FILENAME;
-	
+	public DataBaseInfo() {
+		this(DEFAULT_DB_FILENAME);
+	}
+
+	public DataBaseInfo(String filename) {
+		this.filename = filename;
+	}
+
+	public void setFileName(String filename) {
+		this.filename = filename;
+	}
+
+	public String getDatabasePath(){
+		return LOCAL_ROOT + SEPERATOR + filename;
+	}
 }

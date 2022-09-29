@@ -9,7 +9,7 @@ import com.exceptions.InternalServerErrorException;
 import com.services.customers.CustomerEntity;
 import com.services.servers.FTPServerEntity;
 
-public class ServerRepositoryImp implements ServerRepository {
+public class ServerRepositoryImp extends RepositoryImpl implements ServerRepository {
 
 	public ServerRepositoryImp() {
 		super();

@@ -1,9 +1,9 @@
-package com.repository.factory;
+package com.utils.factory;
 
 import com.repository.Repository;
 import com.services.Serviceable;
 
-public interface RepositoryFactory {
+public interface AbstractFactory {
 	
 	/**
 	 * @return returns a repository factory depending of the type of the sender.

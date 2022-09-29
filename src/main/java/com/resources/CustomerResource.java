@@ -4,9 +4,9 @@ import com.exceptions.BadRequestException;
 import com.exceptions.ConflictResourceException;
 import com.exceptions.InternalServerErrorException;
 import com.exceptions.NotFoundResourceException;
-import com.repository.factory.CustomerRepositoryFactory;
 import com.services.customers.CustomerEntity;
 import com.services.customers.CustomerService;
+import com.utils.factory.CustomerBusinessFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -22,8 +22,16 @@ import jakarta.ws.rs.core.Response;
 
 @Path("users")
 public class CustomerResource extends ResourceImp{
-	private CustomerService customerService = CustomerRepositoryFactory.buildService();
+	private CustomerService customerService;
 	
+	public CustomerResource() {
+		this.customerService = CustomerBusinessFactory.buildService();;
+	}
+
+	public CustomerResource(CustomerService customerService) {
+		this.customerService = customerService;
+	}
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response welcomingToFlopBox(@Context ContainerRequestContext requestContext) {
@@ -70,4 +78,7 @@ public class CustomerResource extends ResourceImp{
     	return buildHTTPResponse(reply, codeReponse);
     }
 
+	public void setCustomerService(CustomerService customerService) {
+		this.customerService = customerService;
+	}
 }

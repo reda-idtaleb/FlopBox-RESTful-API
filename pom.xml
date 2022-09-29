@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com</groupId>
-    <artifactId>sr2-tp1-idtaleb</artifactId>
+    <artifactId>flopbox</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>sr2-tp1-idtaleb</name>
+    <name>flopbox</name>
 
     <dependencyManagement>
         <dependencies>

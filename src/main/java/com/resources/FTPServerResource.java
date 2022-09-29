@@ -7,12 +7,12 @@ import java.util.List;
 import com.exceptions.BadRequestException;
 import com.exceptions.ConflictResourceException;
 import com.exceptions.NotFoundResourceException;
-import com.repository.factory.ServerRepositoryFactory;
 import com.services.customers.CustomerEntity;
 import com.services.ftp_files.AbstractFTPFileComponentEntity;
 import com.services.servers.FTPServerEntity;
 import com.services.servers.FTPServerService;
 import com.utils.AllowedDataFields;
+import com.utils.factory.ServerBusinessFactory;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -30,8 +30,16 @@ import jakarta.ws.rs.core.UriInfo;
 
 @Path("/servers")
 public class FTPServerResource extends ResourceImp{
-	private FTPServerService serverService = ServerRepositoryFactory.buildService();
+	private FTPServerService serverService;
 	
+	public FTPServerResource() {
+		this(ServerBusinessFactory.buildService());
+	}
+
+	public FTPServerResource(FTPServerService serverService) {
+		this.serverService = serverService;
+	}
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response showAllCreatedServers(@Context ContainerRequestContext ctx) {
@@ -122,5 +130,9 @@ public class FTPServerResource extends ResourceImp{
 		AbstractFTPFileComponentEntity.setUri(uriPath);
         return new FTPFileResource();
     }
+
+	public void setServerService(FTPServerService serverService) {
+		this.serverService = serverService;
+	}
 	
 }

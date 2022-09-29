@@ -1,4 +1,4 @@
-package com.repository.factory;
+package com.utils.factory;
 
 import com.repository.CustomerRepository;
 import com.repository.CustomerRepositoryImp;
@@ -6,14 +6,14 @@ import com.repository.Repository;
 import com.services.Serviceable;
 import com.services.customers.CustomerService;
 
-public class CustomerRepositoryFactory implements RepositoryFactory {
+public class CustomerBusinessFactory implements AbstractFactory {
 
 	/**
 	 * Use this convenience methods instead of the implemented methods.
 	 * @return returns a repository factory depending of the type of the sender.
 	 */
 	public static CustomerRepository buildRepository() {
-		return (CustomerRepository) new CustomerRepositoryFactory().createRepository();
+		return (CustomerRepository) new CustomerBusinessFactory().createRepository();
 	}
 
 	/**
@@ -21,7 +21,7 @@ public class CustomerRepositoryFactory implements RepositoryFactory {
 	 * @return returns a service factory depending of the type of the sender.
 	 */
 	public static CustomerService buildService() {
-		return (CustomerService) new CustomerRepositoryFactory().createService();
+		return (CustomerService) new CustomerBusinessFactory().createService();
 	}
 
 	@Override

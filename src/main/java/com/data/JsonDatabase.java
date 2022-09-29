@@ -22,12 +22,17 @@ import com.services.customers.CustomerEntity;
  * This is the database layer. The responsibility of the database layer is to store domain objects.
  * @author idtaleb
  */
-public class JsonDataBase {
-	
+public class JsonDatabase {
+	private DataBaseInfo dbInfo;
 	private Gson gson = new GsonBuilder().create();
 	private static HashMap<String, CustomerEntity> database;
 	
-	public JsonDataBase() {
+	public JsonDatabase() {
+		this(new DataBaseInfo());
+	}
+
+	public JsonDatabase(DataBaseInfo dbinfo) {
+		this.dbInfo = dbinfo;
 		database = new HashMap<String, CustomerEntity>();
 	}
 	
@@ -38,7 +43,7 @@ public class JsonDataBase {
 	 * @throws InternalServerErrorException When an exception is raised during the data save.
 	 */
 	public void addCustomerData(CustomerEntity customer) throws InternalServerErrorException {
-		try (Writer writer = new FileWriter(DataBaseInfo.DATA_BASE_PATH)) {
+		try (Writer writer = new FileWriter(dbInfo.getDatabasePath())) {
 			database.put(customer.getUsername(), customer);
 			gson.toJson(database, writer);
 			writer.close();
@@ -56,7 +61,7 @@ public class JsonDataBase {
 	 * @throws InternalServerErrorException When an exception is raised during the data save.
 	 */
 	public void deleteCustomerData(CustomerEntity customer) throws InternalServerErrorException {
-		try (Writer writer = new FileWriter(DataBaseInfo.DATA_BASE_PATH)) {
+		try (Writer writer = new FileWriter(dbInfo.getDatabasePath())) {
 			database.remove(customer.getUsername());
 			gson.toJson(database, writer);
 			writer.close();
@@ -72,19 +77,20 @@ public class JsonDataBase {
 	 * @return returns the hashMap (key, values) matching the JSON data.
 	 */
 	public HashMap<String, CustomerEntity> readJSONData() {
-		try (Reader reader = new FileReader(DataBaseInfo.DATA_BASE_PATH)){
+		String dbPath = dbInfo.getDatabasePath();
+		try (Reader reader = new FileReader(dbPath)){
 			Type listType = new TypeToken<HashMap<String, CustomerEntity>>(){}.getType();
 			database = gson.fromJson(reader, listType);
 		    if (database == null || database.isEmpty()) 
 		    	return new HashMap<String, CustomerEntity>();
 		} catch (JsonSyntaxException e) {
-			System.out.println("Json syntax error in "+DataBaseInfo.DATA_BASE_PATH);
+			System.out.println("Json syntax error in "+dbPath);
 			e.printStackTrace();
 		} catch (JsonIOException e) {
 			System.out.println("Json I/O error");
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			File file = new File(DataBaseInfo.DATA_BASE_PATH);
+			File file = new File(dbPath);
 			if (!file.exists()) {
 				try {
 					file.createNewFile();
@@ -98,6 +104,10 @@ public class JsonDataBase {
 			e.printStackTrace();
 		}
 		return database;	
+	}
+
+	public DataBaseInfo getDbInfo() {
+		return this.dbInfo;
 	}
 
 }

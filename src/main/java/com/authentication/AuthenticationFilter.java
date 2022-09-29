@@ -10,9 +10,9 @@ import com.exceptions.IncorrectAuthenticationException;
 import com.exceptions.UnauthorizedUserException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.repository.factory.CustomerRepositoryFactory;
 import com.services.customers.CustomerEntity;
 import com.services.customers.CustomerService;
+import com.utils.factory.CustomerBusinessFactory;
 
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -39,7 +39,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 				String username = tokenizer.nextToken();
 				String password = tokenizer.nextToken();	
 				try {
-					CustomerEntity customer = ((CustomerService) new CustomerRepositoryFactory().createService()).loginCustomer(username, password);
+					CustomerEntity customer = ((CustomerService) new CustomerBusinessFactory().createService()).loginCustomer(username, password);
 					requestContext.setProperty(CUSTOMER_PROPERTY, customer);
 					return ;
 				} catch (UnauthorizedUserException e) {

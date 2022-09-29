@@ -1,4 +1,4 @@
-package com.repository.factory;
+package com.utils.factory;
 
 import com.repository.Repository;
 import com.repository.ServerRepository;
@@ -6,14 +6,14 @@ import com.repository.ServerRepositoryImp;
 import com.services.Serviceable;
 import com.services.servers.FTPServerService;
 
-public class ServerRepositoryFactory implements RepositoryFactory {
+public class ServerBusinessFactory implements AbstractFactory {
 
 	/**
 	 * Use this convenience methods instead of the implemented methods.
 	 * @return returns a repository factory depending of the type of the sender.
 	 */
 	public static ServerRepository buildRepository() {
-		return (ServerRepository) new ServerRepositoryFactory().createRepository();
+		return (ServerRepository) new ServerBusinessFactory().createRepository();
 	}
 
 	/**
@@ -21,7 +21,7 @@ public class ServerRepositoryFactory implements RepositoryFactory {
 	 * @return returns a service factory depending of the type of the sender.
 	 */
 	public static FTPServerService buildService() {
-		return (FTPServerService) new ServerRepositoryFactory().createService();
+		return (FTPServerService) new ServerBusinessFactory().createService();
 	}
 
 	@Override
