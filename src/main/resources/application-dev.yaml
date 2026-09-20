@@ -1,0 +1,8 @@
+app:
+  ftp:
+    # Allows the bundled local FTP server and other RFC1918 hosts during development only.
+    allow-private-addresses: true
+
+logging:
+  level:
+    com.flopbox: DEBUG

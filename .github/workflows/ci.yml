@@ -1,0 +1,41 @@
+name: Continuous integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Test, package, and generate an SBOM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Verify
+        run: mvn --batch-mode verify
+      - name: Upload quality artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-artifacts
+          path: |
+            target/site/jacoco/
+            target/classes/META-INF/sbom/application.cdx.json
+          if-no-files-found: error
+
+  container:
+    name: Build the production container
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build container image
+        run: docker build --tag flopbox-api:${{ github.sha }} .

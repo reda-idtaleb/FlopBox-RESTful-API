@@ -1,127 +1,98 @@
-# The FlopBox platform developed in Java
-- Author: ID-TALEB Réda
-- Creation date: 05 march 2022
+# FlopBox API
 
-# Introduction
-This project implements a platform called FlopBox which is used to centralize the management of remote files stored in a user's FTP servers. The user will be able to interact with his various FTP servers through the FlopBox API and this by using the services offered by the Restful API. There are many services, among them the user can retrieve or/and send files to an FTP server, etc. FlopBox follows a Restful architectural style, it is built with Java JAX-RS API.
+FlopBox est une API REST sécurisée qui centralise les configurations de serveurs FTP d’un utilisateur et lui permet d’agir sur leurs fichiers distants. Cette version 2 remplace l’implémentation universitaire JAX-RS/JSON par une architecture Spring Boot conçue pour une exécution conteneurisée.
 
-# Running the FlopBox Platform
-At the root level (where the pom.xml file exists), run these commands successively in a terminal:
+## Ce qui a changé
 
-Clean with:
-```bash
-$ mvn clean
-```
+- Java 25, Spring Boot 4.1 et Spring Security ;
+- PostgreSQL et migrations versionnées Flyway ;
+- mots de passe hachés avec BCrypt et API protégée par des JWT courts ;
+- OpenAPI et Swagger UI disponibles sur /swagger-ui.html ;
+- clients FTP sans état : aucune session ni aucun identifiant FTP ne sont conservés ;
+- image Docker non-root, health check, limites d’upload et protection contre les accès FTP locaux/privés en production ;
+- tests d’intégration PostgreSQL avec Testcontainers, rapport de couverture, SBOM et CI GitHub Actions.
 
-Compile and generate the executable jar with:
-```bash
-$ mvn package
-```
+Le code de 2022 reste temporairement sous src/main/java/com pour servir de référence de migration. Seul com.flopbox est compilé et exécuté.
 
-Run the jar (located at the root of the project) with:
-```bash
-java -jar target/flopbox-1.0-SNAPSHOT.jar
-```
-# Test with cURL commands
-In order to test the API with Curl commands you can read the [commands.md](https://github.com/reda-idtaleb/FlopBox_RestFul_API/blob/master/commands.md). All Curl commands are reported there.
+## Démarrage local
 
-# Project tree structure
-<pre><font color="#3465A4"><b>.</b></font>
-├── <font color="#3465A4"><b>application</b></font>
-│   └── Main.java
-├── <font color="#3465A4"><b>authentication</b></font>
-│   ├── AuthenticationFilter.java
-│   └── PasswordEncryption.java
-├── <font color="#3465A4"><b>data</b></font>
-│   ├── DataBaseInfo.java
-│   └── JsonDataBase.java
-├── <font color="#3465A4"><b>exceptions</b></font>
-│   ├── AliasAlreadyExistException.java
-│   ├── AliasNotFoundException.java
-│   ├── BadGatewayException.java
-│   ├── BadRequestException.java
-│   ├── CannotDiconnectFromFTPServerException.java
-│   ├── CannotListDirectoryException.java
-│   ├── CannotLoginException.java
-│   ├── CannotLogoutFromFTPServerException.java
-│   ├── ConflictResourceException.java
-│   ├── CustomerAlreadyExistsException.java
-│   ├── CustomerNotFoundException.java
-│   ├── FTPServerAlreadyConnectedException.java
-│   ├── FTPServerConnectionException.java
-│   ├── IncorrectAuthenticationException.java
-│   ├── InternalServerErrorException.java
-│   ├── JSONFieldValueException.java
-│   ├── NotFoundResourceException.java
-│   ├── UnauthorizedUserException.java
-│   ├── UnmatchedJSONKeysException.java
-│   └── UnmatchedJSONValuesException.java
-├── <font color="#3465A4"><b>repository</b></font>
-│   ├── CustomerRepositoryImp.java
-│   ├── CustomerRepository.java
-│   ├── <font color="#3465A4"><b>factory</b></font>
-│   │   ├── CustomerRepositoryFactory.java
-│   │   ├── RepositoryFactory.java
-│   │   └── ServerRepositoryFactory.java
-│   ├── Repository.java
-│   ├── ServerRepositoryImp.java
-│   └── ServerRepository.java
-├── <font color="#3465A4"><b>resources</b></font>
-│   ├── CustomerResource.java
-│   ├── FTPFileResource.java
-│   ├── FTPServerResource.java
-│   ├── ResourceImp.java
-│   └── Resource.java
-├── <font color="#3465A4"><b>services</b></font>
-│   ├── <font color="#3465A4"><b>customers</b></font>
-│   │   ├── CustomerEntity.java
-│   │   └── CustomerService.java
-│   ├── <font color="#3465A4"><b>ftp_files</b></font>
-│   │   ├── AbstractFTPFileComponentEntity.java
-│   │   ├── FTPDirectoryEntity.java
-│   │   └── FTPFileEntity.java
-│   ├── <font color="#3465A4"><b>servers</b></font>
-│   │   ├── FTPFileService.java
-│   │   ├── FTPServerEntity.java
-│   │   ├── FTPServerService.java
-│   │   └── FTPServerSession.java
-│   └── Serviceable.java
-└── <font color="#3465A4"><b>utils</b></font>
-    ├── AllowedDataFields.java
-    └── CustomJacksonMapperProvider.java
+Prérequis : Docker Desktop avec Compose. C’est le chemin recommandé car il utilise la même version de Java et de PostgreSQL que la production.
 
-12 directories, 50 files
-</pre>
+    cp .env.example .env
+    # Modifier au minimum POSTGRES_PASSWORD, DATABASE_PASSWORD et JWT_SECRET.
+    docker compose -f compose.yaml -f compose.dev.yaml up --build
 
-# Architecture
-## Conception
-The FlopBox platform is developed in several architectural layers. This pattern is called `Layered Architecture`. This design pattern allows you to organize the API into several code units, each playing a specific role.
+L’API répond ensuite sur http://localhost:8080 :
 
-Here is a diagram summarizing the layered organization of the FlopBox platform:
+- Swagger UI : http://localhost:8080/swagger-ui.html
+- Spécification OpenAPI : http://localhost:8080/v3/api-docs
+- Sonde de vie : http://localhost:8080/actuator/health
 
-<img src="./docs/layered_architecture.png" alt="drawing" width="600"/>
+Le profil dev autorise les adresses FTP privées afin de pouvoir employer le serveur de démonstration (ftpServer.py). Le profil de production les interdit afin de réduire le risque SSRF.
 
-### **We will specify these layers:**
+Pour compiler sans Docker, installer un JDK 25 et Maven 3.9+, puis lancer :
 
-- **Client interaction layer** 
+    mvn verify
 
-	This layer is to handle client requests sent over HTTP. This layer contains Controllers, which receive requests from clients, forward them to the Service layer, and return the results to clients. The data exchanged between the Controller and the client is in JSON format.
-	- At this layer, a `Resource` interface is defined which will be used to define the methods for sending and receiving HTML requests to clients.
+Les tests d’intégration démarrent un PostgreSQL temporaire via Testcontainers et se désactivent automatiquement lorsqu’aucun moteur Docker n’est disponible.
 
-- **Business layer** 
-	
-	This layer is to implement the basic logic of the API. The `Serviceable` interface allows to group the service classes used in this layer to implement all the business logic.
-	- In this level, another design pattern is implemented. This is the composite. The abstract class `AbstractFTPFileComponentEntity` allows to model the tree structure of the directories of an FTP server. 
+## Utilisation de l’API
 
-- **Persistence layer** 
-	
-	This layer consists of providing an interface to access the database. This layer contains a `Repository` interface which implements create, retrieve, update and delete (CRUD) operations.
-	- Another design pattern used in this layer is the `Abstract Factory`. The `RepositoryFactory` interface allows you to create an instance of a repository without defining the "repositories" classes concretely at the Business layer level.
+1. Créer un compte ou se connecter :
 
-- **Database layer** 
-	
-	This database layer is used to store domain objects (like CustomerEntity and FTPServerEntity). A JSON database is used at this level. 
+    curl --request POST http://localhost:8080/api/v1/auth/register \
+      --header "Content-Type: application/json" \
+      --data '{"username":"reda","password":"a-long-unique-password"}'
 
-# Project conception
+La réponse contient accessToken. L’envoyer à chaque appel protégé :
 
-> **UML diagrams for each layer are available in the [docs](docs) folder.**
+    curl http://localhost:8080/api/v1/servers \
+      --header "Authorization: Bearer <accessToken>"
+
+2. Déclarer un serveur FTP — seuls son hôte, son port et son alias sont persistés :
+
+    curl --request POST http://localhost:8080/api/v1/servers \
+      --header "Authorization: Bearer <accessToken>" \
+      --header "Content-Type: application/json" \
+      --data '{"alias":"demo","host":"ftp.example.net","port":21}'
+
+3. Lister ses fichiers. Les identifiants FTP sont explicitement éphémères dans les en-têtes de la requête ; ne jamais les écrire dans une URL ou les logs :
+
+    curl "http://localhost:8080/api/v1/servers/demo/files?path=/" \
+      --header "Authorization: Bearer <accessToken>" \
+      --header "X-Ftp-Username: ftp-user" \
+      --header "X-Ftp-Password: ftp-password"
+
+Les serveurs FTP anonymes fonctionnent sans ces deux en-têtes. Les opérations supplémentaires — upload, extraction ZIP, création/suppression de répertoires, renommage et téléchargement — sont documentées et exécutables depuis Swagger.
+
+## Mise en production
+
+Compose cible un hôte unique et lie l’API à 127.0.0.1:8080. Placer devant elle un reverse proxy (Caddy, Nginx ou Traefik) qui termine TLS et applique des limites de taille/rate limiting.
+
+    # Sur le serveur : créer un .env propriétaire du compte de déploiement, chmod 600.
+    docker compose --env-file .env -f compose.yaml up --build --detach
+    docker compose ps
+    curl --fail http://127.0.0.1:8080/actuator/health
+
+Avant un déploiement réel :
+
+1. Remplacer toutes les valeurs de .env.example, notamment JWT_SECRET par openssl rand -base64 48.
+2. Ne jamais commiter .env ; utiliser un gestionnaire de secrets dès que l’infrastructure le permet.
+3. Exposer uniquement le reverse proxy sur Internet ; PostgreSQL reste sur le réseau Docker privé.
+4. Sauvegarder régulièrement le volume PostgreSQL avec pg_dump, et restaurer régulièrement une sauvegarde sur un environnement isolé.
+5. Examiner les migrations Flyway et l’image versionnée avant chaque promotion. Une migration s’exécute automatiquement au démarrage.
+6. Conserver les métriques/logs du conteneur et superviser /actuator/health. Une rotation du secret JWT invalide volontairement les jetons existants.
+
+Un tag Git vX.Y.Z publie l’image ghcr.io/<owner>/flopbox-api:X.Y.Z via GitHub Actions. La CI produit à chaque validation le rapport JaCoCo et un SBOM CycloneDX (target/classes/META-INF/sbom/application.cdx.json).
+
+## Architecture
+
+    HTTP / OpenAPI
+          |
+    Spring Security (Bearer JWT)
+          |
+    Controllers -> Services -> Spring Data JPA -> PostgreSQL
+          |
+    FtpFileService -> client Apache Commons Net -> serveur FTP
+
+Les règles métier et les accès externes sont séparés : les contrôleurs ne manipulent pas JPA directement, les mots de passe applicatifs ne sont jamais sérialisés, et le client FTP est créé puis fermé pour chaque requête. Cette isolation rend l’API stateless, testable et adaptable ultérieurement vers FTPS/SFTP ou un fournisseur d’identité externe.
