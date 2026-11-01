@@ -21,7 +21,7 @@
         <java.version>25</java.version>
         <springdoc.version>3.1.1</springdoc.version>
         <commons-net.version>3.12.0</commons-net.version>
-        <jacoco.version>0.8.15</jacoco.version>
+        <jacoco.version>0.8.16</jacoco.version>
         <cyclonedx.version>2.9.1</cyclonedx.version>
         <testcontainers.version>2.0.5</testcontainers.version>
     </properties>
